@@ -32,7 +32,7 @@ class _RootState extends State<Root> {
   Widget build(BuildContext context) {
     final List<Widget> pages = [
       const HomePage(),
-      const ProfilePage(),
+      const ProfilePage(nama: 'Ilham'),
     ];
 
     return Scaffold(
