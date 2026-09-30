@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'detail.dart';
 import 'models/food_item.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,25 +32,39 @@ class HomePage extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: InkWell(
-              onTap: () {},
               borderRadius: BorderRadius.circular(12),
+              onTap: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailPage(item: item),
+                  ),
+                );
+                setState(() {});
+              },
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 1. Gambar Persegi dengan ukuran bebas
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.network(
                         item.imageUrl,
-                        width: 90, // Atur lebar gambar sesuka hati
-                        height: 90, // Atur tinggi gambar sama (1:1)
+                        width: 80,
+                        height: 80,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            width: 80,
+                            height: 80,
+                            color: Colors.grey[300],
+                            child: const Icon(Icons.fastfood, color: Colors.grey),
+                          );
+                        },
                       ),
                     ),
-                    const SizedBox(width: 12), // Jarak antara gambar dan teks
-                    // 2. Konten Teks di sebelah kanan gambar
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,22 +79,18 @@ class HomePage extends StatelessWidget {
                           const SizedBox(height: 4),
                           Text(
                             item.description,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 13,
-                            ),
+                            style: TextStyle(color: Colors.grey[600], fontSize: 12),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 8),
-
-                          // Baris Porsi & Harga Total
+                          const SizedBox(height: 4),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 '${item.quantity} porsi',
                                 style: const TextStyle(
+                                  fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.orange,
                                 ),
@@ -83,6 +98,7 @@ class HomePage extends StatelessWidget {
                               Text(
                                 'Rp ${item.formattedTotal}',
                                 style: const TextStyle(
+                                  fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.green,
                                 ),
@@ -90,14 +106,9 @@ class HomePage extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 2),
-
-                          // Harga Satuan
                           Text(
                             'Rp ${item.formattedPrice} / porsi',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[500],
-                            ),
+                            style: TextStyle(fontSize: 12, color: Colors.grey[500]),
                           ),
                         ],
                       ),
